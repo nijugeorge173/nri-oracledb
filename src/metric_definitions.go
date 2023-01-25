@@ -1622,7 +1622,7 @@ var oracleSysMetrics = oracleMetricGroup{
 			INST_ID,
 			METRIC_NAME,
 			VALUE
-		FROM gv$sysmetric`
+		FROM gv$con_sysmetric`
 	},
 
 	metrics: []*oracleMetric{

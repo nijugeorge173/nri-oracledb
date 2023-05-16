@@ -584,11 +584,11 @@ func TestOraclePDBSysMetrics(t *testing.T) {
 			AddRow("1", "CPU Usage Per Sec", 10.0),
 	)
 
+	sqlxDB := sqlx.NewDb(db, "sqlmock")
+	dbWrapper := database.NewDBWrapper(sqlxDB)
 	var wg sync.WaitGroup
 	metricChan := make(chan newrelicMetricSender, 10)
 
-	sqlxDB := sqlx.NewDb(db, "sqlmock")
-	dbWrapper := database.NewDBWrapper(sqlxDB)
 	wg.Add(1)
 	var generatedMetrics []newrelicMetricSender
 	go oraclePDBSysMetrics.Collect(dbWrapper, &wg, metricChan)
@@ -602,9 +602,7 @@ func TestOraclePDBSysMetrics(t *testing.T) {
 		if !ok {
 			break
 		}
-
 		generatedMetrics = append(generatedMetrics, metric)
-
 	}
 
 	expectedMetrics := []newrelicMetricSender{
@@ -623,7 +621,6 @@ func TestOraclePDBSysMetrics(t *testing.T) {
 	if !reflect.DeepEqual(expectedMetrics, generatedMetrics) {
 		t.Errorf("failed to get expected metric: %s", pretty.Diff(expectedMetrics, generatedMetrics))
 	}
-
 }
 
 func TestInMetrics(t *testing.T) {

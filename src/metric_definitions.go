@@ -2853,7 +2853,6 @@ var oraclePDBSysMetrics = oracleMetricGroup{
 				}
 			}
 		}
-
 		return nil
 	},
 }

@@ -2819,7 +2819,7 @@ var oraclePDBSysMetrics = oracleMetricGroup{
 			defaultMetric: false,
 		},	
 	},
-	metricsGenerator: func(rows database.Rows, metrics []*oracleMetric, metricsChan chan<- newrelicMetricSender) error {
+	metricsGenerator: func(rows database.Rows, pdbMetrics []*oracleMetric, metricsChan chan<- newrelicMetricSender) error {
 		var sysScanner struct {
 			instID     int
 			metricName string
@@ -2835,13 +2835,13 @@ var oraclePDBSysMetrics = oracleMetricGroup{
 			}
 
 			// Match the metric to one of the metrics we want to collect
-			for _, metric := range metrics {
-				if metric.defaultMetric || args.ExtendedMetrics {
-					if sysScanner.metricName == metric.identifier {
+			for _, pdbMetric := range pdbMetrics {
+				if pdbMetric.defaultMetric || args.ExtendedMetrics {
+					if sysScanner.metricName == pdbMetric.identifier {
 						newMetric := &newrelicMetric{
-							name:       metric.name,
+							name:       pdbMetric.name,
 							value:      sysScanner.value,
-							metricType: metric.metricType,
+							metricType: pdbMetric.metricType,
 						}
 
 						metadata := map[string]string{"instanceID": strconv.Itoa(sysScanner.instID)}
